@@ -1,41 +1,328 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "workbook_id": {
-            "type": "string",
-            "defaultValue": "[newGuid()]",
-            "metadata": {
-                "description": "The unique guid for this workbook instance"
-            }
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-              "description": "Location where workbook will be deployed."
-            }
-          }
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workbookDisplayName": {
+      "type": "string",
+      "defaultValue": "Orphaned Resources",
+      "metadata": {
+        "description": "The friendly name for the workbook that is used in the Gallery or Saved List.  This name must be unique within a resource group."
+      }
     },
-    "variables": {},
-    "resources": [
+    "workbookType": {
+      "type": "string",
+      "defaultValue": "workbook",
+      "metadata": {
+        "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
+      }
+    },
+    "workbookSourceId": {
+      "type": "string",
+      "defaultValue": "Azure Monitor",
+      "metadata": {
+        "description": "The id of resource instance to which the workbook will be associated"
+      }
+    },
+    "workbookId": {
+      "type": "string",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The unique guid for this workbook instance"
+      }
+    }
+  },
+  "variables": {
+    "workbookContent": {
+      "version": "Notebook/1.0",
+      "items": [
         {
-            "type": "microsoft.insights/workbooks",
-            "apiVersion": "2018-06-17-preview",
-            "name": "[parameters('workbook_id')]",
-            "location": "[parameters('location')]",
-            "kind": "shared",
-            "identity": {
-                "type": "None"
-            },
-            "properties": {
-                "displayName": "Orphaned Resources",
-                "serializedData": "{\"version\":\"Notebook/1.0\",\"items\":[{\"type\":1,\"content\":{\"json\":\"## Orphaned Azure Resources\"},\"name\":\"text - 0\"},{\"type\":1,\"content\":{\"json\":\"Orphaned resources in Azure should be removed if they are not needed. They can increase Azure costs. Please before removing any orphaned resource be sure that it is not intention or used for some testing!\",\"style\":\"warning\"},\"name\":\"text - 1\"},{\"type\":11,\"content\":{\"version\":\"LinkItem/1.0\",\"style\":\"tabs\",\"links\":[{\"id\":\"30d3608c-e906-4f48-a864-d587bb2a8bcb\",\"cellValue\":\"selectTab\",\"linkTarget\":\"parameter\",\"linkLabel\":\"Disks\",\"subTarget\":\"disks\",\"style\":\"link\"},{\"id\":\"74dfdb08-3403-4dab-837a-b03af54cbb8a\",\"cellValue\":\"selectTab\",\"linkTarget\":\"parameter\",\"linkLabel\":\"NICs\",\"subTarget\":\"nics\",\"style\":\"link\"},{\"id\":\"9bb1f11b-ca79-43fd-a6ba-ce5c5f505821\",\"cellValue\":\"selectTab\",\"linkTarget\":\"parameter\",\"linkLabel\":\"NSGs\",\"subTarget\":\"nsgs\",\"style\":\"link\"},{\"id\":\"dc9bae26-de40-4f10-8db7-e770696fa746\",\"cellValue\":\"selectTab\",\"linkTarget\":\"parameter\",\"linkLabel\":\"Static PIPs\",\"subTarget\":\"spips\",\"style\":\"link\"}]},\"name\":\"links - 8\"},{\"type\":1,\"content\":{\"json\":\"## Orphaned Disks\"},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"disks\"},\"name\":\"text - 3\"},{\"type\":3,\"content\":{\"version\":\"KqlItem/1.0\",\"query\":\"Resources\\r\\n| where type has \\\"microsoft.compute/disks\\\"\\r\\n| extend diskState = tostring(properties.diskState)\\r\\n| where managedBy == \\\"\\\"\\r\\nor diskState == 'Unattached'\\r\\n| project id, diskState, resourceGroup, location, subscriptionId\",\"size\":0,\"queryType\":1,\"resourceType\":\"microsoft.resourcegraph/resources\",\"crossComponentResources\":[\"value::all\"]},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"disks\"},\"name\":\"orphaned_disks\"},{\"type\":1,\"content\":{\"json\":\"## Orphaned NICs\"},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"nics\"},\"name\":\"text - 6\"},{\"type\":3,\"content\":{\"version\":\"KqlItem/1.0\",\"query\":\"Resources\\r\\n| where type has \\\"microsoft.network/networkinterfaces\\\"\\r\\n| where properties !has 'privateLinkConnectionProperties'\\r\\n| where properties !has 'virtualmachine'\\r\\n| project id, resourceGroup, location, subscriptionId\",\"size\":0,\"queryType\":1,\"resourceType\":\"microsoft.resourcegraph/resources\",\"crossComponentResources\":[\"value::all\"]},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"nics\"},\"name\":\"query - 7\"},{\"type\":1,\"content\":{\"json\":\"## Not assigned NSGs\"},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"nsgs\"},\"name\":\"text - 4\"},{\"type\":3,\"content\":{\"version\":\"KqlItem/1.0\",\"query\":\"Resources\\r\\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\\r\\n| project Resource=id, resourceGroup, subscriptionId, location\",\"size\":0,\"queryType\":1,\"resourceType\":\"microsoft.resourcegraph/resources\",\"crossComponentResources\":[\"value::all\"]},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"nsgs\"},\"name\":\"query - 5\"},{\"type\":1,\"content\":{\"json\":\"## Not assigned static public IPs\"},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"spips\"},\"name\":\"text - 9\"},{\"type\":3,\"content\":{\"version\":\"KqlItem/1.0\",\"query\":\"resources\\r\\n| where type has \\\"microsoft.network/publicipaddresses\\\"\\r\\n| where properties.publicIPAllocationMethod == \\\"Static\\\"\\r\\n| where properties !has \\\"ipConfiguration\\\"\",\"size\":0,\"queryType\":1,\"resourceType\":\"microsoft.resourcegraph/resources\",\"crossComponentResources\":[\"value::all\"]},\"conditionalVisibility\":{\"parameterName\":\"selectTab\",\"comparison\":\"isEqualTo\",\"value\":\"spips\"},\"name\":\"query - 10\"}],\"isLocked\":true,\"fallbackResourceIds\":[\"Azure Monitor\"]}",
-                "version": "Notebook/1.0",
-                "category": "workbook",
-                "sourceId": "azure monitor",
-                "tags": []
+          "type": 1,
+          "content": {
+            "json": "## Orphaned Azure Resources"
+          },
+          "name": "orphaned-resources"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "Orphaned resources in Azure should be removed if they are not needed. They can increase Azure costs. Please before removing any orphaned resource be sure that it is not intention or used for some testing!",
+            "style": "warning"
+          },
+          "name": "warning"
+        },
+        {
+          "type": 11,
+          "content": {
+            "version": "LinkItem/1.0",
+            "style": "tabs",
+            "links": [
+              {
+                "id": "30d3608c-e906-4f48-a864-d587bb2a8bcb",
+                "cellValue": "selectTab",
+                "linkTarget": "parameter",
+                "linkLabel": "Disks",
+                "subTarget": "disks",
+                "style": "link"
+              },
+              {
+                "id": "74dfdb08-3403-4dab-837a-b03af54cbb8a",
+                "cellValue": "selectTab",
+                "linkTarget": "parameter",
+                "linkLabel": "NICs",
+                "subTarget": "nics",
+                "style": "link"
+              },
+              {
+                "id": "9bb1f11b-ca79-43fd-a6ba-ce5c5f505821",
+                "cellValue": "selectTab",
+                "linkTarget": "parameter",
+                "linkLabel": "NSGs",
+                "subTarget": "nsgs",
+                "style": "link"
+              },
+              {
+                "id": "dc9bae26-de40-4f10-8db7-e770696fa746",
+                "cellValue": "selectTab",
+                "linkTarget": "parameter",
+                "linkLabel": "Static PIPs",
+                "subTarget": "spips",
+                "style": "link"
+              },
+              {
+                "id": "52482b24-e73e-407a-a458-5bed3065166c",
+                "cellValue": "selectTab",
+                "linkTarget": "parameter",
+                "linkLabel": "Dynamic PIPs",
+                "subTarget": "dpips",
+                "style": "link"
+              }
+            ]
+          },
+          "name": "main-menu"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "## Orphaned Disks"
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "disks"
+          },
+          "name": "disks"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "Resources\r\n| where type has \"microsoft.compute/disks\"\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\nor diskState == 'Unattached'\r\n| project id, diskState, resourceGroup, location, subscriptionId",
+            "size": 0,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "value::all"
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "disks"
+          },
+          "name": "query-disks"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "## Orphaned NICs"
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "nics"
+          },
+          "name": "nics"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where properties !has 'privateLinkConnectionProperties'\r\n| where properties !has 'virtualmachine'\r\n| project id, resourceGroup, location, subscriptionId",
+            "size": 0,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "value::all"
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "nics"
+          },
+          "name": "query-nics"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "## Not assigned NSGs"
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "nsgs"
+          },
+          "name": "nsgs"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| project Resource=id, resourceGroup, subscriptionId, location",
+            "size": 0,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "value::all"
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "nsgs"
+          },
+          "name": "query-nsgs"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "## Not assigned static public IPs"
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "spips"
+          },
+          "name": "spips"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Static\" \r\n| where properties !has \"ipConfiguration\"",
+            "size": 0,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "gridSettings": {
+              "formatters": [
+                {
+                  "columnMatch": "type",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "tenantId",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "kind",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "managedBy",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "sku",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "plan",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "properties",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "zones",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "extendedLocation",
+                  "formatter": 5
+                }
+              ]
             }
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "spips"
+          },
+          "name": "query-spips"
+        },
+        {
+          "type": 1,
+          "content": {
+            "json": "## Not assigned dynamic public IPs"
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "dpips"
+          },
+          "name": "dpips"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Dynamic\"\r\n| where properties !has \"ipConfiguration\"",
+            "size": 0,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "value::all"
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectTab",
+            "comparison": "isEqualTo",
+            "value": "dpips"
+          },
+          "name": "query-dpips"
         }
-    ]
+      ],
+      "isLocked": false,
+      "fallbackResourceIds": [
+        "Azure Monitor"
+      ]
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('workbookId')]",
+      "type": "microsoft.insights/workbooks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2021-03-08",
+      "dependsOn": [],
+      "kind": "shared",
+      "properties": {
+        "displayName": "[parameters('workbookDisplayName')]",
+        "serializedData": "[string(variables('workbookContent'))]",
+        "version": "1.0",
+        "sourceId": "[parameters('workbookSourceId')]",
+        "category": "[parameters('workbookType')]"
+      }
+    }
+  ],
+  "outputs": {
+    "workbookId": {
+      "type": "string",
+      "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
+    }
+  },
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
 }
