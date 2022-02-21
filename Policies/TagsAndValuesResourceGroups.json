@@ -1,0 +1,180 @@
+{
+    "mode": "All",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag1'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag2'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag3'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag4'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag5'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag6'), ']')]",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "modify",
+        "details": {
+            "roleDefinitionIds": [
+              "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "operations": [
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag1'), ']')]",
+                "value": "[parameters('Tag1Value')]"
+              },
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag2'), ']')]",
+                "value": "[parameters('Tag2Value')]"
+              },
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag3'), ']')]",
+                "value": "[parameters('Tag3Value')]"
+              },
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag4'), ']')]",
+                "value": "[parameters('Tag4Value')]"
+              },
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag5'), ']')]",
+                "value": "[parameters('Tag5Value')]"
+              },
+              {
+                "operation": "add",
+                "field": "[concat('tags[', parameters('Tag6'), ']')]",
+                "value": "[parameters('Tag6Value')]"
+              }
+            ]
+          }
+      }
+    },
+    "parameters": {
+        "Tag1": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag1",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "Technical-Owner"
+        },
+        "Tag1Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag1 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter Technical Owner (name.surname)"
+        },
+  
+        "Tag2": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag2",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "Product-Owner"
+        },
+        "Tag2Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag2 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter Product Owner (name.surname)"
+        },
+  
+        "Tag3": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag3",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "Business-Owner"
+        },
+        "Tag3Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag3 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter Business Owner (name.surname)"
+        },
+  
+        "Tag4": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag4",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "App-Name"
+        },
+        "Tag4Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag4 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter Application Name (K3W or SAP ERP or SAP EWM)"
+        },
+  
+        "Tag5": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag5",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "SLA-Category"
+        },
+        "Tag5Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag5 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter SLA Category (A or B or C)"
+        },
+  
+        "Tag6": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag6",
+            "description": "Specify tag name."
+          },
+          "defaultValue": "Classification"
+        },
+        "Tag6Value": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Tag6 value",
+            "description": "Enter defined tag value."
+          },
+          "defaultValue": "Enter classification (public, internal, confidential, strictly_confidential)"
+        }
+      }
+  }
