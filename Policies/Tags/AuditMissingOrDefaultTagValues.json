@@ -1,0 +1,76 @@
+{
+    "mode": "All",
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "field": "tags['Technical-Owner']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Technical-Owner']",
+            "equals": ""
+          },
+          {
+            "field": "tags['Product-Owner']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Product-Owner']",
+            "equals": ""
+          },
+          {
+            "field": "tags['Business-Owner']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Business-Owner']",
+            "equals": ""
+          },
+          {
+            "field": "tags['App-Name']",
+            "equals": "Enter*"
+          },
+          {
+            "field": "tags['App-Name']",
+            "equals": ""
+          },
+          {
+            "field": "tags['SLA-Category']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['SLA-Category']",
+            "equals": ""
+          },
+          {
+            "field": "tags['Classification']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Classification']",
+            "equals": ""
+          },
+          {
+            "field": "tags['Lock']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Lock']",
+            "equals": ""
+          },
+          {
+            "field": "tags['Expiration-Time']",
+            "like": "Enter*"
+          },
+          {
+            "field": "tags['Expiration-Time']",
+            "equals": ""
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+}
