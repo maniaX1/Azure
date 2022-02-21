@@ -1,0 +1,117 @@
+{
+    "mode": "Indexed",
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "field": "[concat('tags[', parameters('Tag1'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag2'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag3'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag4'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag5'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag6'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag7'), ']')]",
+            "exists": "false"
+          },
+          {
+            "field": "[concat('tags[', parameters('Tag8'), ']')]",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    },
+    "parameters": {
+      "Tag1": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag1",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Technical-Owner"
+      },
+
+      "Tag2": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag2",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Product-Owner"
+      },
+      
+      "Tag3": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag3",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Business-Owner"
+      },
+      
+      "Tag4": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag4",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "App-Name"
+      },
+      
+      "Tag5": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag5",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "SLA-Category"
+      },
+      
+      "Tag6": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag6",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Classification"
+      },
+      
+      "Tag7": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag7",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Lock"
+      },
+      
+      "Tag8": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag8",
+          "description": "Enter defined tag value."
+        },
+        "defaultValue": "Expiration-Time"
+      }
+    }
+}
