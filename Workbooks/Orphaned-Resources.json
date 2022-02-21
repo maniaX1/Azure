@@ -146,7 +146,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where properties !has 'privateLinkConnectionProperties'\r\n| where properties !has 'virtualmachine'\r\n| project id, resourceGroup, location, subscriptionId",
+            "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where properties !has 'privateLinkConnectionProperties'\r\n| where properties !has 'virtualmachine'\r\n| project id, resourceGroup, location, subscriptionId, properties.macAddress",
             "size": 0,
             "queryType": 1,
             "resourceType": "microsoft.resourcegraph/resources",
@@ -208,7 +208,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Static\" \r\n| where properties !has \"ipConfiguration\"",
+            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Static\" \r\n| where properties !has \"ipConfiguration\"\r\n| project id, name, subscriptionId, location, resourceGroup",
             "size": 0,
             "queryType": 1,
             "resourceType": "microsoft.resourcegraph/resources",
@@ -279,7 +279,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Dynamic\"\r\n| where properties !has \"ipConfiguration\"",
+            "query": "resources\r\n| where type has \"microsoft.network/publicipaddresses\"\r\n| where properties.publicIPAllocationMethod == \"Dynamic\"\r\n| where properties !has \"ipConfiguration\"\r\n| project id, name, subscriptionId, location, resourceGroup",
             "size": 0,
             "queryType": 1,
             "resourceType": "microsoft.resourcegraph/resources",
