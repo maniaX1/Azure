@@ -1,3 +1,8 @@
+## This script assign Azure AD roles defined in script to Azure AD groups which are loaded from AzureAD based on Where filter
+## and those Azure AD groups are added to Administrative Units in Azure AD as scope.
+## Result of this configuration is that only members or specific Azure AD groups can manage users in Administrative Units per "branch" with
+## specific set of defined Azure AD roles assigned to Azure AD groups
+
 #Connect-AzureAD -TenantId <Tenant_ID>
 #Using this old fashin PSv1 connect for listing all AD groups,PS V2 sometimes does not list all Azure AD groups
 Connect-MsolService
